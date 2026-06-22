@@ -11,8 +11,8 @@ O compilador segue um pipeline estruturado e modular:
 5. **Backend (Transpiler):** Geração de código Java estruturado (`Main.java`) a partir da AST validada, aplicando técnicas modernas de transpilação e empacotamento de dependências.
 
 ## Requisitos
-- Java JDK 17 ou superior (testado com OpenJDK 25)
-- ANTLR 4.13.2
+- Java JDK 17 ou superior
+- ANTLR 4.13.2 <- Pode ser colocado no mesmo diretório do MakeFile.
 - GNU Make
 
 ## Como correr o programa

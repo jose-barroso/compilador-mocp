@@ -1,0 +1,103 @@
+/* ==========================================================
+ * MODULO DE ENCRIPTACAO MOCP v1.0
+ * ==========================================================
+ * Este programa testa todas as funcionalidades do compilador:
+ * - Tree-Shaking (Injeção de Helpers e Scanner)
+ * - Retorno na principal (System.exit)
+ * - Múltiplos I/O (ler, lerc, lers, escrever, escreverc, etc)
+ * - Casts, Unários, Ciclos e Condições
+ * ========================================================== */
+
+// --- PROTÓTIPOS ---
+vazio cabecalho(vazio);
+vazio cifrar(inteiro[], inteiro);
+inteiro principal(vazio);
+
+// --- VARIÁVEIS GLOBAIS ---
+inteiro chave_secreta = 3;
+real versao = 2.5;
+
+// --- FUNÇÕES ---
+
+vazio cabecalho(vazio) {
+    escrevers("\n====================================\n");
+    escrevers("    MODULO DE ENCRIPTACAO MOCP v");
+
+    // Cast de real para inteiro só para testar a tradução nativa do compilador
+    escrever((inteiro)versao);
+
+    escrevers(".0\n");
+    escrevers("====================================\n");
+}
+
+/* Função para encriptar uma palavra (Cifra de César simples) */
+vazio cifrar(inteiro msg[], inteiro offset) {
+    inteiro i = 0;
+    enquanto (msg[i] != 0) {
+        msg[i] = msg[i] + offset;
+        i = i + 1;
+    }
+}
+
+// --- FUNÇÃO PRINCIPAL ---
+inteiro principal(vazio) {
+    inteiro nome[];
+    inteiro carac;
+    inteiro vetor_codigos[5];
+    inteiro i, semente;
+
+    cabecalho();
+
+    escrevers("Introduza o seu identificador (1 palavra): ");
+    nome = lers(); // [!] ATIVA: usaScanner e usaHelperLerString
+
+    escrevers("\nSessao iniciada para o utilizador: ");
+    escrevers(nome); // [!] ATIVA: usaHelperImprimirString
+    escrevers("\n");
+
+    escrevers("Deseja inicializar o protocolo de seguranca? (S/N): ");
+    carac = lerc(); // [!] ATIVA: usaScanner
+
+    se (carac == 'S' || carac == 's') {
+        escrevers("\n[+] Protocolo Autorizado [+]\n");
+
+        escrevers("Insira a semente criptografica (numero inteiro): ");
+        semente = ler(); // [!] ATIVA: usaScanner
+
+        // Preenche o vetor com a geração matemática de chaves
+        para (i = 0; i < 5; i = i + 1) {
+            vetor_codigos[i] = (semente * (i + 1)) - (i * 2);
+        }
+
+        escrevers("Vetor de inicializacao gerado: ");
+        escreverv(vetor_codigos); // [!] ATIVA: usaHelperImprimirVetor
+        escrevers("\n");
+
+        escrevers("Introduza a palavra-passe a encriptar: ");
+        inteiro password[];
+        password = lers();
+
+        // Passamos o vetor por referência (o C/MOCP e o Java funcionam igual aqui)
+        cifrar(password, chave_secreta);
+
+        escrevers("Pacote de dados encriptado: ");
+        escrevers(password);
+        escrevers("\n");
+
+        escrevers("Transmissao concluida com sucesso.\n");
+
+    } senao {
+        // Se a pessoa meter um caractere diferente
+        escrevers("\n[-] Operacao cancelada pelo utilizador ");
+        escrevers(nome);
+        escrevers(".\n");
+    }
+
+    // Para mostrar um caracter individual e testar o escreverc()
+    escrevers("\nStatus do sistema: ");
+    escreverc('K');
+    escrevers("\n");
+
+    // [!] ATIVA: O nosso mapeamento brutal para System.exit(0)
+    retornar 0;
+}

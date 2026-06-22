@@ -1,9 +1,9 @@
-/*Operações com Vetores (Arrays)*/
+/* Erro Léxico: Usar keyword do C */
 vazio principal() {
     inteiro v[5];
     inteiro i = 0;
 
-    para (i = 0; i < 5; i = i + 1) {
+    for (i = 0; i < 5; i = i + 1) {  /* <-- ERRO AQUI! */
         v[i] = i * 10;
     }
 }

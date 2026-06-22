@@ -1,0 +1,149 @@
+/* ==========================================================
+ * JOGO DA FORCA EM MOCP
+ * ==========================================================
+ * Regras:
+ * - O Jogador 1 insere uma palavra secreta.
+ * - O "ecrã" é limpo (para esconder a palavra).
+ * - O Jogador 2 tenta adivinhar letra a letra!
+ * ========================================================== */
+
+// --- PROTÓTIPOS ---
+inteiro calcular_tamanho(inteiro[]);
+vazio inicializar_escondida(inteiro[], inteiro);
+vazio desenhar_forca(inteiro);
+vazio limpar_ecra(vazio);
+inteiro principal(vazio);
+
+// --- FUNÇÕES AUXILIARES ---
+
+/* Retorna o tamanho de uma string (vetor terminado em 0) */
+inteiro calcular_tamanho(inteiro str[]) {
+    inteiro i = 0;
+    enquanto (str[i] != 0) {
+        i = i + 1;
+    }
+    retornar i;
+}
+
+/* Preenche o vetor com '_' para esconder a palavra */
+vazio inicializar_escondida(inteiro esc[], inteiro tam) {
+    inteiro i;
+    para (i = 0; i < tam; i = i + 1) {
+        esc[i] = '_';
+    }
+    esc[tam] = 0; // Fim da string
+}
+
+/* Imprime várias quebras de linha para esconder a palavra do Jogador 2 */
+vazio limpar_ecra(vazio) {
+    inteiro i;
+    para (i = 0; i < 50; i = i + 1) {
+        escrevers("\n");
+    }
+}
+
+/* Arte ASCII da Forca com base no número de erros */
+vazio desenhar_forca(inteiro erros) {
+    escrevers("\n +---+\n |   |\n");
+
+    se (erros == 0) {
+        escrevers("     |\n     |\n     |\n");
+    }
+    se (erros == 1) {
+        escrevers(" O   |\n     |\n     |\n");
+    }
+    se (erros == 2) {
+        escrevers(" O   |\n |   |\n     |\n");
+    }
+    se (erros == 3) {
+        escrevers(" O   |\n/|   |\n     |\n");
+    }
+    se (erros == 4) {
+        escrevers(" O   |\n/|\\  |\n     |\n");
+    }
+    se (erros == 5) {
+        escrevers(" O   |\n/|\\  |\n/    |\n");
+    }
+    se (erros >= 6) {
+        escrevers(" O   |\n/|\\  |\n/ \\  |\n");
+    }
+    escrevers("=========\n");
+}
+
+// --- FUNÇÃO PRINCIPAL ---
+inteiro principal(vazio) {
+    inteiro secreta[];
+    inteiro escondida[50]; // Suporta palavras até 49 letras
+    inteiro tamanho, erros, acertos, max_erros, i;
+    inteiro letra, acertou_nesta_ronda;
+
+    erros = 0;
+    acertos = 0;
+    max_erros = 6;
+
+    escrevers("==================================\n");
+    escrevers("    BEM-VINDO AO JOGO DA FORCA    \n");
+    escrevers("==================================\n");
+
+    escrevers("[JOGADOR 1] Introduz a palavra secreta: ");
+    secreta = lers();
+
+    tamanho = calcular_tamanho(secreta);
+    inicializar_escondida(escondida, tamanho);
+
+    limpar_ecra(); // Esconde a palavra!
+
+    escrevers("=== O JOGO COMECOU! ===\n");
+    escrevers("Dica: Usa apenas letras minusculas.\n");
+
+    // Loop principal do jogo
+    enquanto (erros < max_erros && acertos < tamanho) {
+        desenhar_forca(erros);
+
+        escrevers("\nPalavra: ");
+        escrevers(escondida);
+        escrevers("\n");
+
+        escrevers("Erros: ");
+        escrever(erros);
+        escrevers("/");
+        escrever(max_erros);
+        escrevers("\n");
+
+        escrevers("\n[JOGADOR 2] Tenta uma letra: ");
+        letra = lerc();
+
+        acertou_nesta_ronda = 0;
+
+        // Verifica se a letra está na palavra
+        para (i = 0; i < tamanho; i = i + 1) {
+            se (secreta[i] == letra && escondida[i] == '_') {
+                escondida[i] = letra;
+                acertos = acertos + 1;
+                acertou_nesta_ronda = 1;
+            }
+        }
+
+        se (acertou_nesta_ronda == 0) {
+            erros = erros + 1;
+        }
+    }
+
+    limpar_ecra();
+    desenhar_forca(erros);
+
+    // Ecrã de Fim de Jogo
+    se (acertos == tamanho) {
+        escrevers("\n[VITORIA] PARABENS! Tu salvaste o boneco!\n");
+        escrevers("A palavra era: ");
+        escrevers(secreta);
+        escrevers("\n");
+    } senao {
+        escrevers("\n[DERROTA] GAME OVER! O boneco foi enforcado.\n");
+        escrevers("A palavra secreta era: ");
+        escrevers(secreta);
+        escrevers("\n");
+    }
+
+    retornar 0;
+}

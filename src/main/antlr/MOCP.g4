@@ -110,7 +110,7 @@ ESCREVERS : 'escrevers' ;
 
 // Keywords de C capturadas como erro léxico
 // (Como não estão no parser, se o programador as usar, o parser rejeita)
-ERR_C_KEYWORD : 'int' | 'if' | 'else' | 'while' | 'return' | 'void' | 'float' | 'char' ;
+ERR_C_KEYWORD : 'int' | 'if' | 'else' | 'while' | 'for' | 'return' | 'void' | 'float' | 'double' | 'char' ;
 
 ATRIB       : '=' ;
 MAIS        : '+' ;

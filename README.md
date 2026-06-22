@@ -11,7 +11,7 @@ O compilador segue um pipeline estruturado e modular:
 5. **Backend (Transpiler):** Geração de código Java estruturado (`Main.java`) a partir da AST validada, aplicando técnicas modernas de transpilação e empacotamento de dependências.
 
 ## Requisitos
-- Java JDK 17 ou superior
+- Java JDK 17 ou superior (testado com OpenJDK 25)
 - ANTLR 4.13.2
 - GNU Make
 
@@ -29,6 +29,27 @@ Para correr o compilador sobre um ficheiro de teste `.mocp`, utilize a regra `ru
 ```
 make run FILE=src/test/teste_completo.mocp
 ```
+### Passo 3: Gerar, compilar e executar o código Java
+Para gerar o ficheiro `output/Programa.java`, compilá-lo com `javac` e executá-lo de uma só vez:
+```
+make gerar-executar FILE=src/test/javagenerator_1.mocp
+```
+Ou, em passos separados:
+```
+make gerar FILE=src/test/javagenerator_1.mocp   # Gera e compila Programa.java
+make executar                                    # Executa o programa compilado
+```
+
+### Passo 4: Correr os testes automatizados
+Para validar todos os casos de teste (sucesso + insucesso):
+```
+make test
+```
+Para executar os programas gerados (sem stdin):
+```
+make test-execucao
+```
+
 ### Limpar os ficheiros gerados
 Para remover todas as diretorias temporárias, ficheiros gerados pelo ANTLR e binários compilados:
 ```
@@ -41,7 +62,7 @@ O programa lê o ficheiro `.mocp`, imprime a representação textual da Árvore 
 * **Se não houver erros**, o compilador prossegue para as fases seguintes:
     * **Geração de Código Intermédio (TAC):** Traduz a AST validada para uma lista linear de instruções de três endereços, estruturada com rótulos (*labels*) e variáveis temporárias.
     * **Otimização:** Aplica sucessivamente os módulos de otimização até atingir um ponto fixo. O TAC otimizado e limpo é exibido no terminal para fins de validação lógica.
-    * **Output Final & Transpilação:** Grava autonomamente na raiz do projeto o ficheiro transpilado **`Main.java`**, totalmente compatível com a semântica original e pronto a ser compilado diretamente pelo `javac` e executado na JVM.
+    * **Output Final & Transpilação:** Grava autonomamente em `output/Programa.java` o ficheiro transpilado, totalmente compatível com a semântica original e pronto a ser compilado diretamente pelo `javac` e executado na JVM.
 
 > [!NOTE]
 > O ANTLR deve estar devidamente configurado e acessível no sistema através do comando `antlr4` (ou mapeado no `Makefile`).

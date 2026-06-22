@@ -89,6 +89,14 @@ public class CodeGenerator {
             ficheiroFinal.append("    }\n");
             ficheiroFinal.append("    System.out.print(\"}\");\n");
             ficheiroFinal.append("  }\n\n");
+            ficheiroFinal.append("  public static void imprimirVetor(double[] v) {\n");
+            ficheiroFinal.append("    System.out.print(\"{\");\n");
+            ficheiroFinal.append("    for (int i = 0; i < v.length; i++) {\n");
+            ficheiroFinal.append("      if (i > 0) System.out.print(\",\");\n");
+            ficheiroFinal.append("      System.out.print(v[i]);\n");
+            ficheiroFinal.append("    }\n");
+            ficheiroFinal.append("    System.out.print(\"}\");\n");
+            ficheiroFinal.append("  }\n\n");
         }
 
         // Colamos o corpo do programa logo a seguir às funções auxiliares (se existirem)
@@ -237,7 +245,7 @@ public class CodeGenerator {
         }
     }
 
-    // ---------- INICIALIZADOR DE VETOR (lista { ... }) ----------
+    // ---------- INICIALIZADOR DE VETOR (lista { ... } ou literal string -> ASCII+0) ----------
     private void gerarInicializadorVetor(ASTNode init) {
         if (init instanceof AfirmacaoCompostaNode) {
             sb.append("{");
@@ -247,6 +255,16 @@ public class CodeGenerator {
                 gerarExpressao(itens.get(i));
             }
             sb.append("}");
+        } else if (init instanceof LiteralStringNode) {
+            // Conversão de literal string para int[] de códigos ASCII terminado em 0
+            String texto = ((LiteralStringNode) init).getValor();
+            sb.append("new int[]{");
+            for (int i = 0; i < texto.length(); i++) {
+                if (i > 0) sb.append(", ");
+                sb.append((int) texto.charAt(i));
+            }
+            if (texto.length() > 0) sb.append(", ");
+            sb.append("0}");
         } else {
             gerarExpressao(init);
         }

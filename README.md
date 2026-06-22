@@ -12,7 +12,7 @@ O compilador segue um pipeline estruturado e modular:
 
 ## Requisitos
 - Java JDK 17 ou superior
-- ANTLR 4.13.2
+- ANTLR 4.13.2 <- Pode ser colocado no mesmo diretório do MakeFile
 - GNU Make
 
 ## Como correr o programa
